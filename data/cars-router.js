@@ -19,7 +19,23 @@ router.get("/", (req, res) => {
   })
 })
 
-router.post("/", (req, res) => {
+router.get("/:id", (req, res) => {
+  db('cars')
+  .where({ id: req.params.id})
+  .then(cars => {
+   
+      res.status(200).json(cars)
+    
+  })
+  .catch(err => {
+    console.log(err)
+    res.status(500).json({ error: "failed to display cars" })
+
+  })
+})
+
+
+router.post('/', (req, res) => {
   db('cars')
   .insert(req.body, 'id')
   .then(ids => {
@@ -27,10 +43,35 @@ router.post("/", (req, res) => {
   })
   .catch(err => {
     console.log(err)
-    res.status(500).json({ error: "failed to create new car" })
-
+    res.status(500).json({ error: 'failed to create new car' })
   })
-
 })
+
+router.put("/:id", (req, res) => {
+  db('cars')
+  .where({ id: req.params.id })
+  .update(req.body)
+  .then (cars => {
+    res.status(200).json(cars)    
+  })
+  .catch(err => {
+    console.log(err)
+    res.status(500).json({ error: "failed to display cars" })
+  })
+})
+
+router.delete('/:id', (req, res) => {
+  db('cars')
+    .where({ id: req.params.id })
+    .del()
+    .then (cars => {
+      res.status(200).json(cars)    
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({ error: "failed to display cars" })
+    })
+})
+
 
 module.exports = router
